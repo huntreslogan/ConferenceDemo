@@ -32,19 +32,20 @@ Moderator = os.environ['PHONE_NUMBER']
 agent_sid = ''
 customer_sids = []
 conference_sid = ''
+manager_sid=''
 
 @app.route('/')
 def index():
     return app.send_static_file('index.html')
 
 
-@app.route('/sync/')
-def sync():
-    return app.send_static_file('sync/index.html')
+# @app.route('/sync/')
+# def sync():
+#     return app.send_static_file('sync/index.html')
 
-@app.route('/notify/')
-def notify():
-    return app.send_static_file('notify/index.html')
+# @app.route('/notify/')
+# def notify():
+#     return app.send_static_file('notify/index.html')
 
 @app.route('/inbound_call', methods=['GET','POST'])
 def inbound_call():
@@ -69,6 +70,25 @@ def inbound_call():
 
 @app.route("/monitor_call", methods=["GET", "POST"])
 def monitor():
+    account_sid = os.environ['TWILIO_ACCOUNT_SID']
+    auth_token=os.environ['AUTH_TOKEN']
+    sync_service_sid=os.environ['TWILIO_SYNC_SERVICE_SID']
+
+    client = Client(account_sid, auth_token)
+
+    global manager_sid
+
+    manager_sid = request.values.get('CallSid');
+    print(manager_sid + ' is the manager_sid')
+
+    new_data = {
+        'manager_sid' : manager_sid
+    }
+
+    document = client.sync \
+        .services(sync_service_sid) \
+        .documents("AgentData") \
+        .update(data=new_data)
 
     response = VoiceResponse()
     dial = Dial()
@@ -79,7 +99,21 @@ def monitor():
 
     return str(response)
 
+@app.route("/barge", methods=['POST','GET'])
+def barge():
+    print("posted to barge doc")
 
+    print(conference_sid + ' is my conference and ' + manager_sid + ' is the manager sid')
+    account_sid = os.environ['TWILIO_ACCOUNT_SID']
+    auth_token=os.environ['AUTH_TOKEN']
+
+    client = Client(account_sid, auth_token)
+
+    participant = client.conferences(conference_sid) \
+                    .participants(manager_sid) \
+                    .update(muted="False")
+
+    return ''
 
 @app.route("/capabilitytoken" , methods=["GET"])
 def capability_token():

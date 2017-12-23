@@ -37,6 +37,13 @@ $(function () {
 
     });
 
+    $('#barge-button').click(function() {
+      $("#barge-button").attr('disabled', true);
+      $.post('/barge', function(data){
+        console.log('barged in that thang');
+      });
+    });
+
     $('#monitor-button').click(function () {
 
       console.log('Calling ...');
@@ -80,6 +87,8 @@ $(function () {
           doc.on("updated",function(data) {
           console.log(data);
           $('#monitor-button').attr('disabled', false);
+          $('#barge-button').attr('disabled', false);
+          $('#whisper-button').attr('displayed', false);
 
         });
       });
