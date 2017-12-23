@@ -17,6 +17,9 @@ h1 {
   border-bottom: 1px solid #eee;
 }
 
+h4 {
+  margin: .5rem;
+}
 /*
  * Sidebar
  */
@@ -61,4 +64,20 @@ h1 {
 .placeholder img {
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
+}
+
+.details {
+  margin-top: 5%;
+}
+
+.leave {
+  display: none;
+}
+
+.customer {
+  display: none;
+}
+
+.hide {
+  display: none;
 }

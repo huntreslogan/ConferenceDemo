@@ -1,5 +1,5 @@
 import os
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, Response
 from faker import Factory
 from twilio.rest import Client
 import json
@@ -14,6 +14,7 @@ from twilio.jwt.access_token.grants import (
 from dotenv import load_dotenv, find_dotenv
 from os.path import join, dirname
 from inflection import underscore
+
 
 # Convert keys to snake_case to conform with the twilio-python api definition contract
 def snake_case_keys(somedict):
@@ -51,10 +52,13 @@ def inbound_call():
     with Dial() as dial:
         if request.values.get('From') == Moderator:
             global agent_sid
+
+
             agent_sid = request.values.get('CallSid')
             print(agent_sid + ' is the agent sid')
             dial.conference('AgentConference', start_conference_on_enter=True, end_conference_on_exit=False, status_callback="https://d1395065.ngrok.io/statuscallback", status_callback_event="start end join leave mute hold")
         else:
+            global customer_sids
             customer_sids.append(request.values.get('CallSid'))
             print(customer_sids[0] + ' is the customer sid')
             dial.conference('AgentConference', start_conference_on_enter=False, status_callback="https://d1395065.ngrok.io/statuscallback", status_callback_event="start end join leave mute hold")
@@ -63,13 +67,13 @@ def inbound_call():
 
     return str(response)
 
-@app.route("/monitor", methods=["GET", "POST"])
+@app.route("/monitor_call", methods=["GET", "POST"])
 def monitor():
 
     response = VoiceResponse()
     dial = Dial()
 
-    dial.conference('AgentConference', muted=True, status_callback="https://d1395065.ngrok.io/statuscallback", status_callback_event="start end join leave mute hold")
+    dial.conference('AgentConference', muted=True, beep=False, status_callback="https://d1395065.ngrok.io/statuscallback", status_callback_event="start end join leave mute hold")
 
     response.append(dial)
 
@@ -86,18 +90,41 @@ def capability_token():
 
     capability = ClientCapabilityToken(account_sid, auth_token)
     capability.allow_client_outgoing(application_sid)
+    print(capability)
+    token = capability.to_jwt()
 
-    token = capability.generate()
-
-    return Response(token, mimetype='application/jwt')
+    return jsonify(token=token.decode('utf-8'))
 
 
 
 @app.route('/statuscallback', methods=['GET','POST'])
 def statuscallback():
+    account_sid = os.environ['TWILIO_ACCOUNT_SID']
+    auth_token=os.environ['AUTH_TOKEN']
+    sync_service_sid=os.environ['TWILIO_SYNC_SERVICE_SID']
+
+    client = Client(account_sid, auth_token)
+
+    status = request.values.get('StatusCallbackEvent')
+
     print(request.values.get('ConferenceSid') + ' is the conference sid')
     global conference_sid
     conference_sid = request.values.get('ConferenceSid')
+
+
+    this_call = request.values.get('CallSid');
+
+    if this_call == agent_sid:
+        new_data = {
+            "agent_sid" : agent_sid,
+            "conference_sid" : conference_sid
+        }
+
+        document = client.sync \
+            .services(sync_service_sid) \
+            .documents("AgentData") \
+            .update(data=new_data)
+
     return ''
 
 # Basic health check - check environment variables have been configured
@@ -162,56 +189,56 @@ def generateToken(identity):
 
 
 # Notify - create a device binding from a POST HTTP request
-@app.route('/register', methods=['POST'])
-def register():
-    # get credentials for environment variables
-    account_sid = os.environ['TWILIO_ACCOUNT_SID']
-    api_key = os.environ['TWILIO_API_KEY']
-    api_secret = os.environ['TWILIO_API_SECRET']
-    service_sid = os.environ['TWILIO_NOTIFICATION_SERVICE_SID']
+# @app.route('/register', methods=['POST'])
+# def register():
+#     # get credentials for environment variables
+#     account_sid = os.environ['TWILIO_ACCOUNT_SID']
+#     api_key = os.environ['TWILIO_API_KEY']
+#     api_secret = os.environ['TWILIO_API_SECRET']
+#     service_sid = os.environ['TWILIO_NOTIFICATION_SERVICE_SID']
+#
+#     # Initialize the Twilio client
+#     client = Client(api_key, api_secret, account_sid)
+#
+#     # Body content
+#     content = request.get_json()
+#
+#     content = snake_case_keys(content)
+#
+#     # Get a reference to the notification service
+#     service = client.notify.services(service_sid)
+#
+#     # Create the binding
+#     binding = service.bindings.create(**content)
+#
+#     print(binding)
+#
+#     # Return success message
+#     return jsonify(message="Binding created!")
 
-    # Initialize the Twilio client
-    client = Client(api_key, api_secret, account_sid)
-
-    # Body content
-    content = request.get_json()
-
-    content = snake_case_keys(content)
-
-    # Get a reference to the notification service
-    service = client.notify.services(service_sid)
-
-    # Create the binding
-    binding = service.bindings.create(**content)
-
-    print(binding)
-
-    # Return success message
-    return jsonify(message="Binding created!")
-
-# Notify - send a notification from a POST HTTP request
-@app.route('/send-notification', methods=['POST'])
-def send_notification():
-    # get credentials for environment variables
-    account_sid = os.environ['TWILIO_ACCOUNT_SID']
-    api_key = os.environ['TWILIO_API_KEY']
-    api_secret = os.environ['TWILIO_API_SECRET']
-    service_sid = os.environ['TWILIO_NOTIFICATION_SERVICE_SID']
-
-    # Initialize the Twilio client
-    client = Client(api_key, api_secret, account_sid)
-
-    service = client.notify.services(service_sid)
-
-    # Get the request json or form data
-    content = request.get_json() if request.get_json() else request.form
-
-    content = snake_case_keys(content)
-
-    # Create a notification with the given form data
-    notification = service.notifications.create(**content)
-
-    return jsonify(message="Notification created!")
+# # Notify - send a notification from a POST HTTP request
+# @app.route('/send-notification', methods=['POST'])
+# def send_notification():
+#     # get credentials for environment variables
+#     account_sid = os.environ['TWILIO_ACCOUNT_SID']
+#     api_key = os.environ['TWILIO_API_KEY']
+#     api_secret = os.environ['TWILIO_API_SECRET']
+#     service_sid = os.environ['TWILIO_NOTIFICATION_SERVICE_SID']
+#
+#     # Initialize the Twilio client
+#     client = Client(api_key, api_secret, account_sid)
+#
+#     service = client.notify.services(service_sid)
+#
+#     # Get the request json or form data
+#     content = request.get_json() if request.get_json() else request.form
+#
+#     content = snake_case_keys(content)
+#
+#     # Create a notification with the given form data
+#     notification = service.notifications.create(**content)
+#
+#     return jsonify(message="Notification created!")
 
 @app.route('/<path:path>')
 def static_file(path):

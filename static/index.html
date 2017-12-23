@@ -33,7 +33,7 @@
       </nav>
     </header>
 
-    <div class="container-fluid">
+    <!-- <div class="container-fluid">
       <div class="row">
         <nav class="col-sm-3 col-md-2 d-none d-sm-block bg-light sidebar">
           <ul class="nav nav-pills flex-column">
@@ -46,111 +46,111 @@
             <li class="nav-item">
               <a class="nav-link" href="#">Analytics</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Export</a>
-            </li>
           </ul>
-        </nav>
+        </nav> -->
 
-        <main role="main" class="col-sm-9 ml-sm-auto col-md-10 pt-3">
-          <h1>Live Calls</h1>
+        <main role="main" class="pt-3">
 
           <section class="container text-center">
+          <h1 class="text-left">Top Live Calls</h1>
               <div class="row">
                 <div class="col-sm">
                   <div class="btn-group-vertical btn-group-large" role="group">
-                    <button type="button" class="btn btn-secondary">Monitor</button>
-                    <button type="button" class="btn btn-secondary">Barge</button>
-                    <button type="button" class="btn btn-secondary">Whisper</button>
+                    <button type="button" id="monitor-button" disabled=true class="btn btn-lg btn-block btn-secondary monitor">Monitor</button>
+                    <button type="button" id="leave-button" class="btn btn-lg btn-block btn-secondary hide">Leave</button>
+                    <button type="button" id="barge-button" disabled=true class="btn btn-lg btn-block btn-secondary barge">Barge</button>
+                    <button type="button" id="whisper-button" disabled=true class="btn btn-lg btn-block btn-secondary whisper">Whisper</button>
                   </div>
-                  <!-- <img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail"> -->
                   <h4>Agent 1</h4>
                   <div class="text-muted">Waiting...</div>
                 </div>
                 <div class="col-sm">
                   <div class="btn-group-vertical btn-group-large" role="group">
-                    <button type="button" class="btn btn-secondary">Monitor</button>
-                    <button type="button" class="btn btn-secondary">Barge</button>
-                    <button type="button" class="btn btn-secondary">Whisper</button>
+                    <button type="button" disabled=true class="btn btn-lg btn-block btn-secondary">Monitor</button>
+                    <button type="button" class="btn btn-lg btn-block btn-secondary leave">Leave</button>
+                    <button type="button" disabled=true class="btn btn-lg btn-block btn-secondary">Barge</button>
+                    <button type="button" disabled=true class="btn btn-lg btn-block btn-secondary">Whisper</button>
                   </div>
-                  <!-- <img src="data:image/gif;base64,R0lGODlhAQABAIABAADcgwAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail"> -->
                   <h4>Agent 2</h4>
                   <span class="text-muted">Waiting...</span>
                 </div>
                 <div class="col-sm">
                   <div class="btn-group-vertical btn-group-large" role="group">
-                    <button type="button" class="btn btn-secondary">Monitor</button>
-                    <button type="button" class="btn btn-secondary">Barge</button>
-                    <button type="button" class="btn btn-secondary">Whisper</button>
+                    <button type="button" disabled=true class="btn btn-lg btn-block btn-secondary">Monitor</button>
+                    <button type="button" class="btn btn-lg btn-block btn-secondary leave">Leave</button>
+                    <button type="button" disabled=true class="btn btn-lg btn-block btn-secondary">Barge</button>
+                    <button type="button" disabled=true class="btn btn-lg btn-block btn-secondary">Whisper</button>
                   </div>
-                  <!-- <img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail"> -->
                   <h4>Agent 3</h4>
                   <span class="text-muted">Waiting...</span>
                 </div>
                 <div class="col-sm">
                   <div class="btn-group-vertical btn-group-large" role="group">
-                    <button type="button" class="btn btn-secondary">Monitor</button>
-                    <button type="button" class="btn btn-secondary">Barge</button>
-                    <button type="button" class="btn btn-secondary">Whisper</button>
+                    <button type="button" disabled=true class="btn btn-lg btn-block btn-secondary">Monitor</button>
+                    <button type="button" class="btn btn-lg btn-block btn-secondary leave">Leave</button>
+                    <button type="button" disabled=true class="btn btn-lg btn-block btn-secondary">Barge</button>
+                    <button type="button" disabled=true class="btn btn-lg btn-block btn-secondary">Whisper</button>
                   </div>
-                  <!-- <img src="data:image/gif;base64,R0lGODlhAQABAIABAADcgwAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail"> -->
                   <h4>Agent 4</h4>
                   <span class="text-muted">Waiting...</span>
                 </div>
               </div>
-          </section>
+            </section>
 
-          <h2>Section title</h2>
-          <div class="table-responsive">
-            <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Header</th>
-                  <th>Header</th>
-                  <th>Header</th>
-                  <th>Header</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>1,001</td>
-                  <td>Lorem</td>
-                  <td>ipsum</td>
-                  <td>dolor</td>
-                  <td>sit</td>
-                </tr>
-                <tr>
-                  <td>1,002</td>
-                  <td>amet</td>
-                  <td>consectetur</td>
-                  <td>adipiscing</td>
-                  <td>elit</td>
-                </tr>
-                <tr>
-                  <td>1,003</td>
-                  <td>Integer</td>
-                  <td>nec</td>
-                  <td>odio</td>
-                  <td>Praesent</td>
-                </tr>
-                <tr>
-                  <td>1,003</td>
-                  <td>libero</td>
-                  <td>Sed</td>
-                  <td>cursus</td>
-                  <td>ante</td>
-                </tr>
-                <tr>
-                  <td>1,004</td>
-                  <td>dapibus</td>
-                  <td>diam</td>
-                  <td>Sed</td>
-                  <td>nisi</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+            <section class="container pt-4">
+              <h1>Customer Details</h1>
+              <h3 class="waiting">Waiting...</h3>
+              <div class="table-responsive text-center pt-2 customer">
+                <table class="table table-striped row">
+                  <!-- <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Header</th>
+                      <th>Header</th>
+                      <th>Header</th>
+                      <th>Header</th>
+                    </tr>
+                  </thead> -->
+                  <tbody class="col-12">
+                    <tr>
+                      <td class="key">Name</td>
+                      <td class="value">Jeremy Owlington</td>
+                      <!-- <td>ipsum</td>
+                      <td>dolor</td> -->
+                      <!-- <td>sit</td> -->
+                    </tr>
+                    <tr>
+                      <td>Phone Number</td>
+                      <td>(415) 856-0987</td>
+                      <!-- <td>consectetur</td>
+                      <td>adipiscing</td>
+                      <td>elit</td> -->
+                    </tr>
+                    <tr>
+                      <td>Order #</td>
+                      <td>ON-Upw34599hgt2947594848437</td>
+                      <!-- <td>nec</td>
+                      <td>odio</td>
+                      <td>Praesent</td> -->
+                    </tr>
+                    <tr>
+                      <td>Purchase Date</td>
+                      <td>12/02/17</td>
+                      <!-- <td>Sed</td>
+                      <td>cursus</td>
+                      <td>ante</td> -->
+                    </tr>
+                    <tr>
+                      <td>Sign-up Date</td>
+                      <td>10/14/16</td>
+                      <!-- <td>diam</td>
+                      <td>Sed</td>
+                      <td>nisi</td> -->
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+          </section>
         </main>
       </div>
     </div>
@@ -158,6 +158,8 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
+     <script type="text/javascript" src="//media.twiliocdn.com/sdk/js/client/v1.4/twilio.min.js"></script>
+     <script src="https://media.twiliocdn.com/sdk/js/sync/v0.6/twilio-sync.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
