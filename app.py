@@ -115,6 +115,30 @@ def barge():
 
     return ''
 
+@app.route('/update', methods=['POST'])
+def update():
+    account_sid = os.environ['TWILIO_ACCOUNT_SID']
+    auth_token=os.environ['AUTH_TOKEN']
+
+    client = Client(account_sid, auth_token)
+
+    call = client.calls(manager_sid).update(url="https://d1395065.ngrok.io/whisper", method="POST")
+
+    return ''
+
+@app.route('/whisper' , methods=['POST'])
+def whisper():
+
+    response = VoiceResponse()
+    dial = Dial()
+
+    dial.conference('AgentConference', beep=False, coach=agent_sid ,status_callback="https://d1395065.ngrok.io/statuscallback", status_callback_event="start end join leave mute hold")
+
+    response.append(dial)
+
+    return str(response)
+
+
 @app.route("/capabilitytoken" , methods=["GET"])
 def capability_token():
     account_sid = os.environ['TWILIO_ACCOUNT_SID']

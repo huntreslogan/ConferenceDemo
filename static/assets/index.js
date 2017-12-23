@@ -52,6 +52,10 @@ $(function () {
       $('#leave-button').removeClass('hide');
     });
 
+    $('#whisper-button').click(function(){
+      $.post('/update');
+    });
+
     $.getJSON('/token', function (tokenResponse) {
       //Initialize the Sync client
       console.log(tokenResponse.token);
@@ -88,7 +92,7 @@ $(function () {
           console.log(data);
           $('#monitor-button').attr('disabled', false);
           $('#barge-button').attr('disabled', false);
-          $('#whisper-button').attr('displayed', false);
+          $('#whisper-button').attr('disabled', false);
 
         });
       });
