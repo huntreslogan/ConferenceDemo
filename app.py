@@ -57,12 +57,12 @@ def inbound_call():
 
             agent_sid = request.values.get('CallSid')
             print(agent_sid + ' is the agent sid')
-            dial.conference('AgentConference', start_conference_on_enter=True, end_conference_on_exit=False, status_callback="https://d1395065.ngrok.io/statuscallback", status_callback_event="start end join leave mute hold")
+            dial.conference('AgentConference', start_conference_on_enter=True, end_conference_on_exit=False, status_callback="https://54fe809f.ngrok.io/statuscallback", status_callback_event="start end join leave mute hold")
         else:
             global customer_sids
             customer_sids.append(request.values.get('CallSid'))
             print(customer_sids[0] + ' is the customer sid')
-            dial.conference('AgentConference', start_conference_on_enter=False, status_callback="https://d1395065.ngrok.io/statuscallback", status_callback_event="start end join leave mute hold")
+            dial.conference('AgentConference', start_conference_on_enter=False, status_callback="https://54fe809f.ngrok.io/statuscallback", status_callback_event="start end join leave mute hold")
 
     response.append(dial)
 
@@ -93,7 +93,7 @@ def monitor():
     response = VoiceResponse()
     dial = Dial()
 
-    dial.conference('AgentConference', muted=True, beep=False, status_callback="https://d1395065.ngrok.io/statuscallback", status_callback_event="start end join leave mute hold")
+    dial.conference('AgentConference', muted=True, beep=False, status_callback="https://54fe809f.ngrok.io/statuscallback", status_callback_event="start end join leave mute hold")
 
     response.append(dial)
 
@@ -122,7 +122,7 @@ def update():
 
     client = Client(account_sid, auth_token)
 
-    call = client.calls(manager_sid).update(url="https://d1395065.ngrok.io/whisper", method="POST")
+    call = client.calls(manager_sid).update(url="https://54fe809f.ngrok.io/whisper", method="POST")
 
     return ''
 
@@ -132,7 +132,7 @@ def whisper():
     response = VoiceResponse()
     dial = Dial()
 
-    dial.conference('AgentConference', beep=False, coach=agent_sid ,status_callback="https://d1395065.ngrok.io/statuscallback", status_callback_event="start end join leave mute hold")
+    dial.conference('AgentConference', beep=False, coach=agent_sid ,status_callback="https://54fe809f.ngrok.io/statuscallback", status_callback_event="start end join leave mute hold")
 
     response.append(dial)
 

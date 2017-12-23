@@ -9,6 +9,8 @@ $(function () {
       Twilio.Device.setup(data.token);
 
       Twilio.Device.ready(function (device) {
+        device.sounds.outgoing(false);
+        device.sounds.disconnect(false);
         console.log('Twilio.Device Ready!');
 
       });
