@@ -66,7 +66,7 @@ python app.py
 
 Your application should now be running at [http://localhost:5000](http://localhost:5000). When you're finished, deactivate your virtual environment using `deactivate`.
 
-<!-- ![Home Screen](https://cloud.githubusercontent.com/assets/809856/26252870/0bfd80ac-3c77-11e7-9252-2b19dff5d784.png) -->
+![Alt text](static/assets/img/ConferenceDemoHome.png?raw=true "Title")
 
 ## Running the demo with ngrok
 
