@@ -70,12 +70,9 @@ h4 {
   margin-top: 5%;
 }
 
-.leave {
-  display: none;
-}
-
-.customer {
-  display: none;
+.live {
+  color: red;
+  font-size: 1.5rem;
 }
 
 .hide {

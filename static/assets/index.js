@@ -33,6 +33,7 @@ $(function () {
     });
 
     $('#leave-button').click(function() {
+      console.log("hitting leave");
       Twilio.Device.disconnectAll();
       $('#leave-button').addClass('hide');
       $('#monitor-button').removeClass('hide');
@@ -95,6 +96,15 @@ $(function () {
           $('#monitor-button').attr('disabled', false);
           $('#barge-button').attr('disabled', false);
           $('#whisper-button').attr('disabled', false);
+
+          if(data.status == 'go'){
+            $("#customer").removeClass('hide');
+            $("#no-customer").addClass('hide');
+            $('#agent1-message').addClass('live');
+            $('#agent1-message').removeClass('text-muted');
+            $('#agent1-message').html('Live call');
+
+          }
 
         });
       });

@@ -30,7 +30,7 @@ load_dotenv(dotenv_path)
 
 Moderator = os.environ['PHONE_NUMBER']
 agent_sid = ''
-customer_sids = []
+customer_sid = ''
 conference_sid = ''
 manager_sid=''
 
@@ -57,12 +57,12 @@ def inbound_call():
 
             agent_sid = request.values.get('CallSid')
             print(agent_sid + ' is the agent sid')
-            dial.conference('AgentConference', start_conference_on_enter=True, end_conference_on_exit=False, status_callback="https://54fe809f.ngrok.io/statuscallback", status_callback_event="start end join leave mute hold")
+            dial.conference('AgentConference', start_conference_on_enter=True, status_callback="https://54fe809f.ngrok.io/statuscallback", status_callback_event="start end join leave mute hold")
         else:
-            global customer_sids
-            customer_sids.append(request.values.get('CallSid'))
-            print(customer_sids[0] + ' is the customer sid')
-            dial.conference('AgentConference', start_conference_on_enter=False, status_callback="https://54fe809f.ngrok.io/statuscallback", status_callback_event="start end join leave mute hold")
+            global customer_sid
+            customer_sid = request.values.get('CallSid')
+            print(customer_sid + ' is the customer sid')
+            dial.conference('AgentConference', start_conference_on_enter=False, end_conference_on_exit=True, status_callback="https://54fe809f.ngrok.io/statuscallback", status_callback_event="start end join leave mute hold")
 
     response.append(dial)
 
@@ -175,13 +175,24 @@ def statuscallback():
     if this_call == agent_sid:
         new_data = {
             "agent_sid" : agent_sid,
-            "conference_sid" : conference_sid
+            "conference_sid" : conference_sid,
+            "status" : "waiting"
         }
 
-        document = client.sync \
-            .services(sync_service_sid) \
-            .documents("AgentData") \
-            .update(data=new_data)
+        # document = client.sync \
+        #     .services(sync_service_sid) \
+        #     .documents("AgentData") \
+        #     .update(data=new_data)
+    else:
+        new_data = {
+            "customer_sid" : customer_sid,
+            "status" : "go"
+        }
+
+    document = client.sync \
+        .services(sync_service_sid) \
+        .documents("AgentData") \
+        .update(data=new_data)
 
     return ''
 

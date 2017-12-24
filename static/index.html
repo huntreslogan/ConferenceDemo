@@ -62,12 +62,12 @@
                     <button type="button" id="whisper-button" disabled=true class="btn btn-lg btn-block btn-secondary whisper">Whisper</button>
                   </div>
                   <h4>Agent 1</h4>
-                  <div class="text-muted">Waiting...</div>
+                  <div id="agent1-message" class="text-muted">Waiting...</div>
                 </div>
                 <div class="col-sm">
                   <div class="btn-group-vertical btn-group-large" role="group">
                     <button type="button" disabled=true class="btn btn-lg btn-block btn-secondary">Monitor</button>
-                    <button type="button" class="btn btn-lg btn-block btn-secondary leave">Leave</button>
+                    <button type="button" class="btn btn-lg btn-block btn-secondary hide">Leave</button>
                     <button type="button" disabled=true class="btn btn-lg btn-block btn-secondary">Barge</button>
                     <button type="button" disabled=true class="btn btn-lg btn-block btn-secondary">Whisper</button>
                   </div>
@@ -77,7 +77,7 @@
                 <div class="col-sm">
                   <div class="btn-group-vertical btn-group-large" role="group">
                     <button type="button" disabled=true class="btn btn-lg btn-block btn-secondary">Monitor</button>
-                    <button type="button" class="btn btn-lg btn-block btn-secondary leave">Leave</button>
+                    <button type="button" class="btn btn-lg btn-block btn-secondary hide">Leave</button>
                     <button type="button" disabled=true class="btn btn-lg btn-block btn-secondary">Barge</button>
                     <button type="button" disabled=true class="btn btn-lg btn-block btn-secondary">Whisper</button>
                   </div>
@@ -87,7 +87,7 @@
                 <div class="col-sm">
                   <div class="btn-group-vertical btn-group-large" role="group">
                     <button type="button" disabled=true class="btn btn-lg btn-block btn-secondary">Monitor</button>
-                    <button type="button" class="btn btn-lg btn-block btn-secondary leave">Leave</button>
+                    <button type="button" class="btn btn-lg btn-block btn-secondary hide">Leave</button>
                     <button type="button" disabled=true class="btn btn-lg btn-block btn-secondary">Barge</button>
                     <button type="button" disabled=true class="btn btn-lg btn-block btn-secondary">Whisper</button>
                   </div>
@@ -99,8 +99,8 @@
 
             <section class="container pt-4">
               <h1>Customer Details</h1>
-              <h3 class="waiting">Waiting...</h3>
-              <div class="table-responsive text-center pt-2 customer">
+              <h3 id="no-customer">Waiting...</h3>
+              <div id="customer" class="table-responsive text-center pt-2 hide">
                 <table class="table table-striped row">
                   <!-- <thead>
                     <tr>
