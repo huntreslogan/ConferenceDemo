@@ -67,43 +67,37 @@ $(function () {
         if (state != 'connected') {
           console.log('Sync is not live (websocket connection ' + state);
         } else {
-          console.log('Sync is live!');
+          console.log('Sync is live and it is awesome!');
         }
       });
 
       //Let's pop a message on the screen to show that Sync is ready
       console.log('Sync initialized!');
 
-
-      //This code will create and/or open a Sync document
-      //Note the use of promises
-      // $('#leave-button').click(function() {
-      //   Twilio.Device.disconnectAll();
-      //   $('#monitor-button').removeClass('hide');
-      // });
-      //
-      // $('#monitor-button').click(function () {
-      //
-      //   console.log('Calling ...');
-      //   Twilio.Device.connect();
-      //   $('#monitor-button').addClass('hide');
-      //   $('#leave-button').removeClass('hide');
-      // });
-
       syncClient.document("AgentData").then(function(doc) {
           doc.on("updated",function(data) {
           console.log(data);
-          $('#monitor-button').attr('disabled', false);
-          $('#barge-button').attr('disabled', false);
-          $('#whisper-button').attr('disabled', false);
 
-          if(data.status == 'go'){
+          if(data.call_status == 'conference-start'){
+            $('#monitor-button').attr('disabled', false);
+            $('#barge-button').attr('disabled', false);
+            $('#whisper-button').attr('disabled', false);
             $("#customer").removeClass('hide');
             $("#no-customer").addClass('hide');
             $('#agent1-message').addClass('live');
             $('#agent1-message').removeClass('text-muted');
             $('#agent1-message').html('Live call');
+          }
 
+          if(data.call_status == 'conference-end'){
+            $('#monitor-button').attr('disabled', true);
+            $('#barge-button').attr('disabled', true);
+            $('#whisper-button').attr('disabled', true);
+            $("#customer").addClass('hide');
+            $("#no-customer").removeClass('hide');
+            $('#agent1-message').removeClass('live');
+            $('#agent1-message').addClass('text-muted');
+            $('#agent1-message').html('Waiting...');
           }
 
         });

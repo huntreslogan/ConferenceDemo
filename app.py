@@ -3,7 +3,7 @@ from flask import Flask, jsonify, request, Response
 from faker import Factory
 from twilio.rest import Client
 import json
-from twilio.twiml.voice_response import VoiceResponse, Dial, Conference
+from twilio.twiml.voice_response import VoiceResponse, Dial, Conference, Say, Play
 from twilio.jwt.access_token import AccessToken
 from twilio.jwt.client import ClientCapabilityToken
 from twilio.jwt.access_token.grants import (
@@ -57,16 +57,25 @@ def inbound_call():
 
             agent_sid = request.values.get('CallSid')
             print(agent_sid + ' is the agent sid')
-            dial.conference('AgentConference', start_conference_on_enter=True, status_callback="https://54fe809f.ngrok.io/statuscallback", status_callback_event="start end join leave mute hold")
+            dial.conference('AgentConference', status_callback="https://54fe809f.ngrok.io/statuscallback", status_callback_event="start end join leave mute hold")
         else:
             global customer_sid
             customer_sid = request.values.get('CallSid')
             print(customer_sid + ' is the customer sid')
-            dial.conference('AgentConference', start_conference_on_enter=False, end_conference_on_exit=True, status_callback="https://54fe809f.ngrok.io/statuscallback", status_callback_event="start end join leave mute hold")
+            dial.conference('AgentConference', wait_url="https://54fe809f.ngrok.io/hold_message", end_conference_on_exit=True, status_callback="https://54fe809f.ngrok.io/statuscallback", status_callback_event="start end join leave mute hold")
 
     response.append(dial)
 
     return str(response)
+
+@app.route("/hold_message", methods=['POST', 'GET'])
+def hold_message():
+    response = VoiceResponse()
+    response.say("Thank you for calling customer service. We will connect you with an agent shortly", voice='alice')
+    response.play("http://com.twilio.music.guitars.s3.amazonaws.com/Pitx_-_Long_Winter.mp3", loop=10)
+
+    return str(response)
+
 
 @app.route("/monitor_call", methods=["GET", "POST"])
 def monitor():
@@ -163,7 +172,8 @@ def statuscallback():
 
     client = Client(account_sid, auth_token)
 
-    status = request.values.get('StatusCallbackEvent')
+    call_status = request.values.get('StatusCallbackEvent')
+    print(call_status)
 
     print(request.values.get('ConferenceSid') + ' is the conference sid')
     global conference_sid
@@ -176,18 +186,14 @@ def statuscallback():
         new_data = {
             "agent_sid" : agent_sid,
             "conference_sid" : conference_sid,
-            "status" : "waiting"
+            "call_status" : call_status
         }
-
-        # document = client.sync \
-        #     .services(sync_service_sid) \
-        #     .documents("AgentData") \
-        #     .update(data=new_data)
     else:
         new_data = {
             "customer_sid" : customer_sid,
-            "status" : "go"
+            "call_status" : call_status
         }
+
 
     document = client.sync \
         .services(sync_service_sid) \
