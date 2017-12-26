@@ -39,14 +39,6 @@ def index():
     return app.send_static_file('index.html')
 
 
-# @app.route('/sync/')
-# def sync():
-#     return app.send_static_file('sync/index.html')
-
-# @app.route('/notify/')
-# def notify():
-#     return app.send_static_file('notify/index.html')
-
 @app.route('/inbound_call', methods=['GET','POST'])
 def inbound_call():
     response = VoiceResponse()
@@ -57,12 +49,12 @@ def inbound_call():
 
             agent_sid = request.values.get('CallSid')
             print(agent_sid + ' is the agent sid')
-            dial.conference('AgentConference', status_callback="https://54fe809f.ngrok.io/statuscallback", status_callback_event="start end join leave mute hold")
+            dial.conference('AgentConference', status_callback="/statuscallback", status_callback_event="start end join leave mute hold")
         else:
             global customer_sid
             customer_sid = request.values.get('CallSid')
             print(customer_sid + ' is the customer sid')
-            dial.conference('AgentConference', wait_url="https://54fe809f.ngrok.io/hold_message", end_conference_on_exit=True, status_callback="https://54fe809f.ngrok.io/statuscallback", status_callback_event="start end join leave mute hold")
+            dial.conference('AgentConference', wait_url="/hold_message", end_conference_on_exit=True, status_callback="/statuscallback", status_callback_event="start end join leave mute hold")
 
     response.append(dial)
 
@@ -102,7 +94,7 @@ def monitor():
     response = VoiceResponse()
     dial = Dial()
 
-    dial.conference('AgentConference', muted=True, beep=False, status_callback="https://54fe809f.ngrok.io/statuscallback", status_callback_event="start end join leave mute hold")
+    dial.conference('AgentConference', muted=True, beep=False, status_callback="/statuscallback", status_callback_event="start end join leave mute hold")
 
     response.append(dial)
 
@@ -131,7 +123,7 @@ def update():
 
     client = Client(account_sid, auth_token)
 
-    call = client.calls(manager_sid).update(url="https://54fe809f.ngrok.io/whisper", method="POST")
+    call = client.calls(manager_sid).update(url="/whisper", method="POST")
 
     return ''
 
@@ -141,7 +133,7 @@ def whisper():
     response = VoiceResponse()
     dial = Dial()
 
-    dial.conference('AgentConference', beep=False, coach=agent_sid ,status_callback="https://54fe809f.ngrok.io/statuscallback", status_callback_event="start end join leave mute hold")
+    dial.conference('AgentConference', beep=False, coach=agent_sid ,status_callback="/statuscallback", status_callback_event="start end join leave mute hold")
 
     response.append(dial)
 
@@ -248,72 +240,11 @@ def generateToken(identity):
         sync_grant = SyncGrant(service_sid=sync_service_sid)
         token.add_grant(sync_grant)
 
-    # Create a Video grant and add to token
-    # video_grant = VideoGrant()
-    # token.add_grant(video_grant)
-
-    # Create an Chat grant and add to token
-    # if chat_service_sid:
-    #     chat_grant = ChatGrant(service_sid=chat_service_sid)
-    #     token.add_grant(chat_grant)
-
-    # Return token info as JSON
     return jsonify(identity=identity, token=token.to_jwt().decode('utf-8'))
 
 
 
 
-# Notify - create a device binding from a POST HTTP request
-# @app.route('/register', methods=['POST'])
-# def register():
-#     # get credentials for environment variables
-#     account_sid = os.environ['TWILIO_ACCOUNT_SID']
-#     api_key = os.environ['TWILIO_API_KEY']
-#     api_secret = os.environ['TWILIO_API_SECRET']
-#     service_sid = os.environ['TWILIO_NOTIFICATION_SERVICE_SID']
-#
-#     # Initialize the Twilio client
-#     client = Client(api_key, api_secret, account_sid)
-#
-#     # Body content
-#     content = request.get_json()
-#
-#     content = snake_case_keys(content)
-#
-#     # Get a reference to the notification service
-#     service = client.notify.services(service_sid)
-#
-#     # Create the binding
-#     binding = service.bindings.create(**content)
-#
-#     print(binding)
-#
-#     # Return success message
-#     return jsonify(message="Binding created!")
-
-# # Notify - send a notification from a POST HTTP request
-# @app.route('/send-notification', methods=['POST'])
-# def send_notification():
-#     # get credentials for environment variables
-#     account_sid = os.environ['TWILIO_ACCOUNT_SID']
-#     api_key = os.environ['TWILIO_API_KEY']
-#     api_secret = os.environ['TWILIO_API_SECRET']
-#     service_sid = os.environ['TWILIO_NOTIFICATION_SERVICE_SID']
-#
-#     # Initialize the Twilio client
-#     client = Client(api_key, api_secret, account_sid)
-#
-#     service = client.notify.services(service_sid)
-#
-#     # Get the request json or form data
-#     content = request.get_json() if request.get_json() else request.form
-#
-#     content = snake_case_keys(content)
-#
-#     # Create a notification with the given form data
-#     notification = service.notifications.create(**content)
-#
-#     return jsonify(message="Notification created!")
 
 @app.route('/<path:path>')
 def static_file(path):
